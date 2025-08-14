@@ -1,46 +1,93 @@
-# Getting Started with Create React App
+# Healthcare MVP Web App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
+This is a prototype React application for a healthcare MVP. It features secure JWT-based login and role-based dashboards. No signup functionality is included; users log in directly. The app uses Redux for state management, React Router for routing, Tailwind CSS for styling, and Axios for API calls.
 
-## Available Scripts
+### Key Features
+- Secure login with JWT authentication (token refresh handled automatically).
+- Role-based access: Super Admin, Hospital Admin, Doctor, Tech Advisor, etc.
+- Dashboards redirected based on user role.
+- Private routes protected.
+- Professional UI with Tailwind CSS.
+- Toast notifications for feedback.
+- Loading spinners and error handling.
 
-In the project directory, you can run:
+### Technologies
+- React 18
+- TypeScript
+- Redux Toolkit
+- React Router v6
+- Tailwind CSS
+- Axios
+- React Hot Toast
+- CryptoJS (for local storage encryption)
 
-### `npm start`
+## Setup and Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Prerequisites
+- Node.js >= 18
+- npm or yarn
+- Backend server running at `http://localhost:8080` (configure in `.env` if different)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Steps
+1. Clone the repository:
 
-### `npm test`
+git clone <repo-url>
+cd healthcare-mvp-web</repo-url>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. Install dependencies:
+npm install
 
-### `npm run build`
+3. Create `.env` file (optional):
+REACT_APP_API_URL=http://localhost:8080/api
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. Run the app:
+npm start
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+5. Opens at `http://localhost:3000`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+6. Build for production:
+   npm run build
 
-### `npm run eject`
+8. Test:
+   npm test
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+9. t### Docker (Optional)
+- Build image: `docker build -t healthcare-mvp-web .`
+- Run: `docker run -p 3000:3000 healthcare-mvp-web`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Usage
+- Navigate to `/login`.
+- Enter credentials (provided by backend).
+- Upon successful login, redirected to role-based dashboard.
+- Logout clears session and redirects to login.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Roles and Dashboards
+- **SUPER_ADMIN**: `/admin/dashboard`
+- **HOSPITAL_ADMIN**: `/hospital/dashboard`
+- **DOCTOR**: `/doctor/dashboard`
+- **TECH_ADVISOR**: `/advisor/dashboard`
+- Others: Similar pattern (add as needed).
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Security Notes
+- Tokens stored in localStorage (consider httpOnly cookies for production).
+- User data encrypted in storage using CryptoJS (use secure key in prod).
+- Axios interceptors handle token refresh on 401.
+- All API calls use JWT bearer token.
+- Validate tokens on app load via `checkAuthStatus`.
+- Bypass AWS Cognito: All Amplify code removed; use JWT endpoints.
 
-## Learn More
+## Troubleshooting
+- **CSS not applying**: Ensure Tailwind is configured in `tailwind.config.js` and `craco.config.js`.
+- **Compilation errors**: Check imports; remove duplicates (e.g., multiple stores).
+- **API errors**: Verify backend is running and endpoints match (e.g., `/api/auth/login`).
+- **Role redirect issues**: Ensure backend returns `role` in user object.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Future Improvements
+- Add forgot password.
+- Implement MFA.
+- Use secure cookie storage for tokens.
+- Add unit/integration tests.
+- Optimize performance with lazy loading.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+For issues, contact [your email].

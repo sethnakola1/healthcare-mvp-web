@@ -1,0 +1,22 @@
+[
+  {
+    "groupName": "SUPERADMIN",
+    "precedence": 1
+  },
+  {
+    "groupName": "TECHADVISOR",
+    "precedence": 2
+  },
+  {
+    "groupName": "HOSPITALADMIN",
+    "precedence": 3
+  },
+  {
+    "groupName": "CLINICALSTAFF",
+    "precedence": 4
+  },
+  {
+    "groupName": "SUPPORTSTAFF",
+    "precedence": 5
+  }
+]
