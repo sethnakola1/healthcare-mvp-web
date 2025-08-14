@@ -1,0 +1,95 @@
+{
+  "version": "1",
+  "cognitoConfig": {
+    "identityPoolName": "healthcareWebIdentityPool",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "dev383aba10",
+    "userPoolName": "healthcareWebUserPool",
+    "autoVerifiedAttributes": [
+      "email"
+    ],
+    "mfaConfiguration": "ON",
+    "mfaTypes": [
+      "SMS Text Message",
+      "TOTP"
+    ],
+    "smsAuthenticationMessage": "HealthHorizon Security Code: {####} - Do not share this code.",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Healthcare - Verify Your Account",
+    "emailVerificationMessage": "Welcome to Healthcare. Your verification code is: {####} ",
+    "defaultPasswordPolicy": true,
+    "passwordPolicyMinLength": "12",
+    "passwordPolicyCharacters": [
+      "Requires Lowercase",
+      "Requires Uppercase",
+      "Requires Numbers",
+      "Requires Symbols"
+    ],
+    "requiredAttributes": [
+      "email",
+      "gender",
+      "name",
+      "phone_number"
+    ],
+    "aliasAttributes": [],
+    "userpoolClientGenerateSecret": false,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+      "birthdate",
+      "family_name",
+      "email",
+      "gender",
+      "name",
+      "phone_number"
+    ],
+    "userpoolClientReadAttributes": [
+      "birthdate",
+      "email",
+      "family_name",
+      "name",
+      "phone_number"
+    ],
+    "userpoolClientLambdaRole": "health383aba10_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": true,
+    "sharedId": "383aba10",
+    "resourceName": "healthcareWebAuth",
+    "authSelections": "identityPoolAndUserPool",
+    "useDefault": "manual",
+    "thirdPartyAuth": false,
+    "usernameAttributes": [
+      "email, phone_number"
+    ],
+    "userPoolGroups": true,
+    "adminQueries": true,
+    "triggers": {
+      "CustomMessage": [
+        "verification-link"
+      ],
+      "DefineAuthChallenge": [
+        "captcha-define-challenge"
+      ],
+      "PostConfirmation": [
+        "add-to-group"
+      ]
+    },
+    "hostedUI": true,
+    "hostedUIDomainName": "healthcare-auth-dev",
+    "authProvidersUserPool": [
+      "Google"
+    ],
+    "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"gender\":\"genders\",\"name\":\"name\",\"phone_number\":\"phoneNumbers\",\"username\":\"sub\"}}]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://localhost:3000/auth/callback/\"],\"LogoutURLs\":[\"https://localhost:3000/\"]}",
+    "userPoolGroupList": [
+      "SUPERADMIN",
+      "TECHADVISOR",
+      "HOSPITALADMIN",
+      "CLINICALSTAFF",
+      "SUPPORTSTAFF"
+    ],
+    "adminQueryGroup": "TECHADVISOR",
+    "serviceName": "Cognito",
+    "verificationBucketName": "healthcarewebauthverificationbucket",
+    "usernameCaseSensitive": false,
+    "useEnabledMfas": true
+  }
+}

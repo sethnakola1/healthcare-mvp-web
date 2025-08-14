@@ -1,0 +1,281 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-dev-dev-1812d-authRole",
+      "UnauthRoleArn": "arn:aws:iam::206501439109:role/amplify-dev-dev-1812d-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::206501439109:role/amplify-dev-dev-1812d-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-dev-dev-1812d-deployment",
+      "UnauthRoleName": "amplify-dev-dev-1812d-unauthRole",
+      "StackName": "amplify-dev-dev-1812d",
+      "StackId": "arn:aws:cloudformation:us-east-1:206501439109:stack/amplify-dev-dev-1812d/e40284c0-7463-11f0-a862-0e796940341f",
+      "AmplifyAppId": "d23pmadlbilsiv",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-dev-dev-1812d-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    }
+  },
+  "auth": {
+    "userPoolGroups": {
+      "service": "Cognito-UserPool-Groups",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "healthcareWebAuth",
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ]
+        }
+      ],
+      "lastPushTimeStamp": "2025-08-09T14:13:23.902Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-dev-dev-1812d-deployment/amplify-cfn-templates/auth/userPoolGroups-cloudformation-template.json",
+        "logicalId": "authuserPoolGroups"
+      },
+      "output": {
+        "TECHADVISORGroupRole": "arn:aws:iam::206501439109:role/us-east-1_FQzUpBz4u-TECHADVISORGroupRole",
+        "CLINICALSTAFFGroupRole": "arn:aws:iam::206501439109:role/us-east-1_FQzUpBz4u-CLINICALSTAFFGroupRole",
+        "HOSPITALADMINGroupRole": "arn:aws:iam::206501439109:role/us-east-1_FQzUpBz4u-HOSPITALADMINGroupRole",
+        "SUPPORTSTAFFGroupRole": "arn:aws:iam::206501439109:role/us-east-1_FQzUpBz4u-SUPPORTSTAFFGroupRole",
+        "SUPERADMINGroupRole": "arn:aws:iam::206501439109:role/us-east-1_FQzUpBz4u-SUPERADMINGroupRole"
+      },
+      "lastPushDirHash": "qqzXMleV+RfUZUu0e4eO5g/KD18="
+    },
+    "healthcareWebAuth": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "healthcareWebAuthCustomMessage",
+          "triggerProvider": "Cognito",
+          "attributes": [
+            "Arn",
+            "Name"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "healthcareWebAuthDefineAuthChallenge",
+          "triggerProvider": "Cognito",
+          "attributes": [
+            "Arn",
+            "Name"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "healthcareWebAuthPostConfirmation",
+          "triggerProvider": "Cognito",
+          "attributes": [
+            "Arn",
+            "Name"
+          ]
+        }
+      ],
+      "customAuth": false,
+      "frontendAuthConfig": {
+        "socialProviders": [
+          "GOOGLE"
+        ],
+        "usernameAttributes": [
+          "EMAIL",
+          "PHONE_NUMBER"
+        ],
+        "signupAttributes": [
+          "EMAIL",
+          "GENDER",
+          "NAME",
+          "PHONE_NUMBER"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": "12",
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_UPPERCASE",
+            "REQUIRES_NUMBERS",
+            "REQUIRES_SYMBOLS"
+          ]
+        },
+        "mfaConfiguration": "ON",
+        "mfaTypes": [
+          "SMS",
+          "TOTP"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-dev-dev-1812d-deployment/amplify-cfn-templates/auth/healthcareWebAuth-cloudformation-template.json",
+        "logicalId": "authhealthcareWebAuth"
+      },
+      "lastPushTimeStamp": "2025-08-09T14:13:23.902Z",
+      "output": {
+        "CreatedSNSRole": "arn:aws:iam::206501439109:role/sns383aba101812d-dev",
+        "UserPoolId": "us-east-1_FQzUpBz4u",
+        "AppClientIDWeb": "25kbeeb0pdvdifuld2hbuo4gen",
+        "AppClientID": "6sncs0dgfoc9bnpud2khgf9kls",
+        "HostedUIDomain": "healthcare-auth-dev-dev",
+        "IdentityPoolId": "us-east-1:13de9e52-d43b-4b53-b704-9ac1069239ed",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:206501439109:userpool/us-east-1_FQzUpBz4u",
+        "IdentityPoolName": "healthcareWebIdentityPool__dev",
+        "OAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://localhost:3000/auth/callback/\"],\"LogoutURLs\":[\"https://localhost:3000/\"]}",
+        "UserPoolName": "healthcareWebUserPool"
+      },
+      "lastPushDirHash": "xLqx1pMldtOxNVhI3vp5GxMVJ78="
+    }
+  },
+  "function": {
+    "healthcareWebAuthCustomMessage": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2025-08-09T14:09:51.360Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2025-08-09T14:09:51.433Z",
+      "distZipFilename": "healthcareWebAuthCustomMessage-7539626352484a646c53-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-dev-dev-1812d-deployment",
+        "s3Key": "amplify-builds/healthcareWebAuthCustomMessage-7539626352484a646c53-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-dev-dev-1812d-deployment/amplify-cfn-templates/function/healthcareWebAuthCustomMessage-cloudformation-template.json",
+        "logicalId": "functionhealthcareWebAuthCustomMessage"
+      },
+      "lastPushTimeStamp": "2025-08-09T14:13:23.902Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::206501439109:role/healthcareWebAuthCustomMessage-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:206501439109:function:healthcareWebAuthCustomMessage-dev",
+        "Name": "healthcareWebAuthCustomMessage-dev",
+        "LambdaExecutionRole": "healthcareWebAuthCustomMessage-dev"
+      },
+      "lastPushDirHash": "HH/Oj5IhPtzWM4xGOA6FO7IblgY="
+    },
+    "healthcareWebAuthDefineAuthChallenge": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2025-08-09T14:09:53.362Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2025-08-09T14:09:53.392Z",
+      "distZipFilename": "healthcareWebAuthDefineAuthChallenge-73526f75477030615147-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-dev-dev-1812d-deployment",
+        "s3Key": "amplify-builds/healthcareWebAuthDefineAuthChallenge-73526f75477030615147-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-dev-dev-1812d-deployment/amplify-cfn-templates/function/healthcareWebAuthDefineAuthChallenge-cloudformation-template.json",
+        "logicalId": "functionhealthcareWebAuthDefineAuthChallenge"
+      },
+      "lastPushTimeStamp": "2025-08-09T14:13:23.902Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::206501439109:role/healthcareWebAuthDefineAuthChallenge-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:206501439109:function:healthcareWebAuthDefineAuthChallenge-dev",
+        "Name": "healthcareWebAuthDefineAuthChallenge-dev",
+        "LambdaExecutionRole": "healthcareWebAuthDefineAuthChallenge-dev"
+      },
+      "lastPushDirHash": "AEOOPw13OcjuRYl1JjhrAQjhqJo="
+    },
+    "healthcareWebAuthPostConfirmation": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "lastBuildTimeStamp": "2025-08-09T14:09:55.906Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2025-08-09T14:09:56.808Z",
+      "distZipFilename": "healthcareWebAuthPostConfirmation-4e73416977556d443131-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-dev-dev-1812d-deployment",
+        "s3Key": "amplify-builds/healthcareWebAuthPostConfirmation-4e73416977556d443131-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-dev-dev-1812d-deployment/amplify-cfn-templates/function/healthcareWebAuthPostConfirmation-cloudformation-template.json",
+        "logicalId": "functionhealthcareWebAuthPostConfirmation"
+      },
+      "lastPushTimeStamp": "2025-08-09T14:13:23.902Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::206501439109:role/healthcareWebAuthPostConfirmation-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:206501439109:function:healthcareWebAuthPostConfirmation-dev",
+        "Name": "healthcareWebAuthPostConfirmation-dev",
+        "LambdaExecutionRole": "healthcareWebAuthPostConfirmation-dev"
+      },
+      "lastPushDirHash": "DGyAmkV+LJ8HrdEIlZ+wWgA4nzY="
+    },
+    "AdminQueriesa1314894": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "healthcareWebAuth",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ],
+      "lastBuildTimeStamp": "2025-08-09T14:10:00.643Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2025-08-09T14:10:02.606Z",
+      "distZipFilename": "AdminQueriesa1314894-56574350447836772b4e-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-dev-dev-1812d-deployment",
+        "s3Key": "amplify-builds/AdminQueriesa1314894-56574350447836772b4e-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-dev-dev-1812d-deployment/amplify-cfn-templates/function/AdminQueriesa1314894-cloudformation-template.json",
+        "logicalId": "functionAdminQueriesa1314894"
+      },
+      "lastPushTimeStamp": "2025-08-09T14:13:23.902Z",
+      "output": {
+        "LambdaExecutionRoleArn": "arn:aws:iam::206501439109:role/AdminQueriesa1314894LambdaRole-dev",
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:206501439109:function:AdminQueriesa1314894-dev",
+        "Name": "AdminQueriesa1314894-dev",
+        "LambdaExecutionRole": "AdminQueriesa1314894LambdaRole-dev"
+      },
+      "lastPushDirHash": "h1Eg44lPvGRyzeyMNHbvKeWtQNE="
+    }
+  },
+  "api": {
+    "AdminQueries": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "authorizationType": "AMAZON_COGNITO_USER_POOLS",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "healthcareWebAuth",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "AdminQueriesa1314894",
+          "attributes": [
+            "Arn",
+            "Name"
+          ]
+        }
+      ],
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-dev-dev-1812d-deployment/amplify-cfn-templates/api/AdminQueries-cloudformation-template.json",
+        "logicalId": "apiAdminQueries"
+      },
+      "lastPushTimeStamp": "2025-08-09T14:13:23.902Z",
+      "output": {
+        "ApiName": "AdminQueries",
+        "RootUrl": "https://0gj4aj125j.execute-api.us-east-1.amazonaws.com/dev",
+        "ApiId": "0gj4aj125j"
+      },
+      "lastPushDirHash": "+7UJNUzbCN7VbS9MV+PLzXJ/FBY="
+    }
+  }
+}

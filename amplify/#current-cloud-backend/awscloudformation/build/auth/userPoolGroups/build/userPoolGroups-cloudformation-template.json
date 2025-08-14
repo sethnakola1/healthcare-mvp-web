@@ -1,0 +1,365 @@
+{
+  "Description": "{\"createdOn\":\"Windows\",\"createdBy\":\"Amplify\",\"createdWith\":\"14.0.0\",\"stackType\":\"auth-Cognito-UserPool-Groups\",\"metadata\":{\"whyContinueWithGen1\":\"Prefer not to answer\"}}",
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "env": {
+      "Type": "String"
+    },
+    "AuthRoleArn": {
+      "Type": "String"
+    },
+    "UnauthRoleArn": {
+      "Type": "String"
+    },
+    "authhealthcareWebAuthUserPoolId": {
+      "Type": "String",
+      "Default": "authhealthcareWebAuthUserPoolId"
+    },
+    "authhealthcareWebAuthIdentityPoolId": {
+      "Type": "String",
+      "Default": "authhealthcareWebAuthIdentityPoolId"
+    },
+    "authhealthcareWebAuthAppClientID": {
+      "Type": "String",
+      "Default": "authhealthcareWebAuthAppClientID"
+    },
+    "authhealthcareWebAuthAppClientIDWeb": {
+      "Type": "String",
+      "Default": "authhealthcareWebAuthAppClientIDWeb"
+    }
+  },
+  "Conditions": {
+    "ShouldNotCreateEnvResources": {
+      "Fn::Equals": [
+        {
+          "Ref": "env"
+        },
+        "NONE"
+      ]
+    }
+  },
+  "Resources": {
+    "SUPERADMINGroup": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "Description": "override success",
+        "GroupName": "SUPERADMIN",
+        "Precedence": 1,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "SUPERADMINGroupRole",
+            "Arn"
+          ]
+        },
+        "UserPoolId": {
+          "Ref": "authhealthcareWebAuthUserPoolId"
+        }
+      }
+    },
+    "SUPERADMINGroupRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "cognito-identity.amazonaws.com:aud": {
+                    "Ref": "authhealthcareWebAuthIdentityPoolId"
+                  }
+                },
+                "ForAnyValue:StringLike": {
+                  "cognito-identity.amazonaws.com:amr": "authenticated"
+                }
+              }
+            }
+          ]
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "authhealthcareWebAuthUserPoolId"
+              },
+              "-SUPERADMINGroupRole"
+            ]
+          ]
+        }
+      }
+    },
+    "TECHADVISORGroup": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "Description": "override success",
+        "GroupName": "TECHADVISOR",
+        "Precedence": 2,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "TECHADVISORGroupRole",
+            "Arn"
+          ]
+        },
+        "UserPoolId": {
+          "Ref": "authhealthcareWebAuthUserPoolId"
+        }
+      }
+    },
+    "TECHADVISORGroupRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "cognito-identity.amazonaws.com:aud": {
+                    "Ref": "authhealthcareWebAuthIdentityPoolId"
+                  }
+                },
+                "ForAnyValue:StringLike": {
+                  "cognito-identity.amazonaws.com:amr": "authenticated"
+                }
+              }
+            }
+          ]
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "authhealthcareWebAuthUserPoolId"
+              },
+              "-TECHADVISORGroupRole"
+            ]
+          ]
+        }
+      }
+    },
+    "HOSPITALADMINGroup": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "Description": "override success",
+        "GroupName": "HOSPITALADMIN",
+        "Precedence": 3,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "HOSPITALADMINGroupRole",
+            "Arn"
+          ]
+        },
+        "UserPoolId": {
+          "Ref": "authhealthcareWebAuthUserPoolId"
+        }
+      }
+    },
+    "HOSPITALADMINGroupRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "cognito-identity.amazonaws.com:aud": {
+                    "Ref": "authhealthcareWebAuthIdentityPoolId"
+                  }
+                },
+                "ForAnyValue:StringLike": {
+                  "cognito-identity.amazonaws.com:amr": "authenticated"
+                }
+              }
+            }
+          ]
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "authhealthcareWebAuthUserPoolId"
+              },
+              "-HOSPITALADMINGroupRole"
+            ]
+          ]
+        }
+      }
+    },
+    "CLINICALSTAFFGroup": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "Description": "override success",
+        "GroupName": "CLINICALSTAFF",
+        "Precedence": 4,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "CLINICALSTAFFGroupRole",
+            "Arn"
+          ]
+        },
+        "UserPoolId": {
+          "Ref": "authhealthcareWebAuthUserPoolId"
+        }
+      }
+    },
+    "CLINICALSTAFFGroupRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "cognito-identity.amazonaws.com:aud": {
+                    "Ref": "authhealthcareWebAuthIdentityPoolId"
+                  }
+                },
+                "ForAnyValue:StringLike": {
+                  "cognito-identity.amazonaws.com:amr": "authenticated"
+                }
+              }
+            }
+          ]
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "authhealthcareWebAuthUserPoolId"
+              },
+              "-CLINICALSTAFFGroupRole"
+            ]
+          ]
+        }
+      }
+    },
+    "SUPPORTSTAFFGroup": {
+      "Type": "AWS::Cognito::UserPoolGroup",
+      "Properties": {
+        "Description": "override success",
+        "GroupName": "SUPPORTSTAFF",
+        "Precedence": 5,
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "SUPPORTSTAFFGroupRole",
+            "Arn"
+          ]
+        },
+        "UserPoolId": {
+          "Ref": "authhealthcareWebAuthUserPoolId"
+        }
+      }
+    },
+    "SUPPORTSTAFFGroupRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "cognito-identity.amazonaws.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "cognito-identity.amazonaws.com:aud": {
+                    "Ref": "authhealthcareWebAuthIdentityPoolId"
+                  }
+                },
+                "ForAnyValue:StringLike": {
+                  "cognito-identity.amazonaws.com:amr": "authenticated"
+                }
+              }
+            }
+          ]
+        },
+        "RoleName": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "authhealthcareWebAuthUserPoolId"
+              },
+              "-SUPPORTSTAFFGroupRole"
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "SUPERADMINGroupRole": {
+      "Value": {
+        "Fn::GetAtt": [
+          "SUPERADMINGroupRole",
+          "Arn"
+        ]
+      }
+    },
+    "TECHADVISORGroupRole": {
+      "Value": {
+        "Fn::GetAtt": [
+          "TECHADVISORGroupRole",
+          "Arn"
+        ]
+      }
+    },
+    "HOSPITALADMINGroupRole": {
+      "Value": {
+        "Fn::GetAtt": [
+          "HOSPITALADMINGroupRole",
+          "Arn"
+        ]
+      }
+    },
+    "CLINICALSTAFFGroupRole": {
+      "Value": {
+        "Fn::GetAtt": [
+          "CLINICALSTAFFGroupRole",
+          "Arn"
+        ]
+      }
+    },
+    "SUPPORTSTAFFGroupRole": {
+      "Value": {
+        "Fn::GetAtt": [
+          "SUPPORTSTAFFGroupRole",
+          "Arn"
+        ]
+      }
+    }
+  }
+}
