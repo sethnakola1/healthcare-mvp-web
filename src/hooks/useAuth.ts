@@ -1,12 +1,12 @@
 // src/hooks/useAuth.ts
 import { useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { loginUser, getCurrentUser, logoutUser, changePassword, validateToken, clearError } from '../store/slices/authSlice';
-import { LoginRequest, ChangePasswordRequest } from '../types';
+import { loginUser, logoutUser, getCurrentUser, clearError, clearAuth } from '../store/slices/authSlice';
+import { LoginRequest } from '../types';
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();
-  const { user, isAuthenticated, isLoading, error, loginLoading } = useAppSelector((state) => state.auth);
+  const { user, token, isAuthenticated, loading, error } = useAppSelector((state) => state.auth);
 
   const login = useCallback(
     async (credentials: LoginRequest) => {
@@ -20,81 +20,28 @@ export const useAuth = () => {
     await dispatch(logoutUser());
   }, [dispatch]);
 
-  const getUserInfo = useCallback(async () => {
+  const refreshUser = useCallback(async () => {
     await dispatch(getCurrentUser());
-  }, [dispatch]);
-
-  const updatePassword = useCallback(
-    async (passwordData: ChangePasswordRequest) => {
-      const result = await dispatch(changePassword(passwordData));
-      return result;
-    },
-    [dispatch]
-  );
-
-  const checkTokenValidity = useCallback(async () => {
-    await dispatch(validateToken());
   }, [dispatch]);
 
   const clearAuthError = useCallback(() => {
     dispatch(clearError());
   }, [dispatch]);
 
-  // Permission helpers
-  const hasRole = useCallback(
-    (role: string) => {
-      return user?.role === role;
-    },
-    [user]
-  );
-
-  const hasAnyRole = useCallback(
-    (roles: string[]) => {
-      return user?.role ? roles.includes(user.role) : false;
-    },
-    [user]
-  );
-
-  const canCreateBusinessUser = useCallback(() => {
-    return hasRole('SUPER_ADMIN');
-  }, [hasRole]);
-
-  const canCreateHospital = useCallback(() => {
-    return hasAnyRole(['SUPER_ADMIN', 'TECH_ADVISOR']);
-  }, [hasAnyRole]);
-
-  const canManageHospitalUsers = useCallback(() => {
-    return hasRole('HOSPITAL_ADMIN');
-  }, [hasRole]);
-
-  const canManagePatients = useCallback(() => {
-    return hasAnyRole(['HOSPITAL_ADMIN', 'DOCTOR', 'NURSE', 'RECEPTIONIST']);
-  }, [hasAnyRole]);
+  const clearAuthentication = useCallback(() => {
+    dispatch(clearAuth());
+  }, [dispatch]);
 
   return {
-    // State
     user,
+    token,
     isAuthenticated,
-    isLoading,
+    loading,
     error,
-    loginLoading,
-
-    // Actions
     login,
     logout,
-    getUserInfo,
-    updatePassword,
-    checkTokenValidity,
-    clearAuthError,
-
-    // Permissions
-    hasRole,
-    hasAnyRole,
-    canCreateBusinessUser,
-    canCreateHospital,
-    canManageHospitalUsers,
-    canManagePatients,
+    refreshUser,
+    clearError: clearAuthError,
+    clearAuth: clearAuthentication,
   };
 };
-
-export default useAuth;

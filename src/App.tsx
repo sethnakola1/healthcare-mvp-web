@@ -1,117 +1,160 @@
-import React, { useEffect } from 'react';
+// src/App.tsx
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
-import { LoginForm, ProtectedRoute, UnauthorizedPage } from './components/auth';
-import { DashboardRouter } from './components/dashboard';
-import { AppLayout } from './components/layout';
 import { useAuth } from './hooks/useAuth';
-import { LoadingSpinner } from './components/common';
 
-// Main App Content Component
-const AppContent: React.FC = () => {
-  const { isAuthenticated, checkTokenValidity, isLoading } = useAuth();
+// Components
+import LoginForm from './components/auth/LoginForm';
+import SuperAdminDashboard from './components/dashboard/SuperAdminDashboard';
+import ProtectedRoute from './components/common/ProtectedRoute';
+import { UserRole } from './types';
 
-  useEffect(() => {
-    // Check token validity on app load
-    if (isAuthenticated) {
-      checkTokenValidity();
-    }
-  }, [isAuthenticated, checkTokenValidity]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner size="lg" text="Loading..." />
-      </div>
-    );
+// Error Boundary Component
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
   }
 
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-6">
+            <div className="text-center">
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                Something went wrong
+              </h2>
+              <p className="text-gray-600 mb-4">
+                An unexpected error occurred. Please refresh the page.
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+              >
+                Refresh Page
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// Unauthorized Page Component
+const UnauthorizedPage: React.FC = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-6">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          Access Denied
+        </h2>
+        <p className="text-gray-600 mb-4">
+          You don't have permission to access this page.
+        </p>
+        <button
+          onClick={() => window.history.back()}
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+        >
+          Go Back
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+// Not Found Page Component
+const NotFoundPage: React.FC = () => (
+  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-6">
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          Page Not Found
+        </h2>
+        <p className="text-gray-600 mb-4">
+          The page you're looking for doesn't exist.
+        </p>
+        <a
+          href="/dashboard"
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 inline-block"
+        >
+          Go to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+);
+
+// App Routes Component
+const AppRoutes: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/unauthorized" element={<UnauthorizedPage />} />
+    <Routes>
+      {/* Public Routes */}
+      <Route
+        path="/login"
+        element={
+          isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginForm />
+        }
+      />
 
-        {/* Protected Routes */}
-        <Route path="/" element={
-          <ProtectedRoute>
-            <Navigate to="/dashboard" replace />
+      {/* Protected Routes */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute requiredRole={[UserRole.SUPER_ADMIN, UserRole.TECH_ADVISOR]}>
+            <SuperAdminDashboard />
           </ProtectedRoute>
-        } />
+        }
+      />
 
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <AppLayout>
-              <DashboardRouter />
-            </AppLayout>
-          </ProtectedRoute>
-        } />
+      {/* Utility Routes */}
+      <Route path="/unauthorized" element={<UnauthorizedPage />} />
+      <Route path="/404" element={<NotFoundPage />} />
 
-        {/* Business User Management Routes (Super Admin Only) */}
-        <Route path="/admin/*" element={
-          <ProtectedRoute requiredRole="SUPER_ADMIN">
-            <AppLayout>
-              <div className="p-6">
-                <h1 className="text-2xl font-bold mb-4">Admin Management</h1>
-                <p>Business user management coming soon...</p>
-              </div>
-            </AppLayout>
-          </ProtectedRoute>
-        } />
+      {/* Default redirects */}
+      <Route
+        path="/"
+        element={
+          <Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />
+        }
+      />
 
-        {/* Hospital Management Routes (Super Admin & Tech Advisor) */}
-        <Route path="/hospitals/*" element={
-          <ProtectedRoute requiredRoles={['SUPER_ADMIN', 'TECH_ADVISOR']}>
-            <AppLayout>
-              <div className="p-6">
-                <h1 className="text-2xl font-bold mb-4">Hospital Management</h1>
-                <p>Hospital management coming soon...</p>
-              </div>
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-
-        {/* User Management Routes (Hospital Admin) */}
-        <Route path="/users/*" element={
-          <ProtectedRoute requiredRole="HOSPITAL_ADMIN">
-            <AppLayout>
-              <div className="p-6">
-                <h1 className="text-2xl font-bold mb-4">User Management</h1>
-                <p>Hospital user management coming soon...</p>
-              </div>
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-
-        {/* Patient Management Routes */}
-        <Route path="/patients/*" element={
-          <ProtectedRoute requiredRoles={['HOSPITAL_ADMIN', 'DOCTOR', 'NURSE', 'RECEPTIONIST']}>
-            <AppLayout>
-              <div className="p-6">
-                <h1 className="text-2xl font-bold mb-4">Patient Management</h1>
-                <p>Patient management coming soon...</p>
-              </div>
-            </AppLayout>
-          </ProtectedRoute>
-        } />
-
-        {/* Catch all route */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
-    </Router>
+      {/* Catch all route */}
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 };
 
 // Main App Component
 const App: React.FC = () => {
   return (
-    <Provider store={store}>
-      <div className="App">
-        <AppContent />
-      </div>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <Router>
+          <div className="App">
+            <AppRoutes />
+          </div>
+        </Router>
+      </Provider>
+    </ErrorBoundary>
   );
 };
 

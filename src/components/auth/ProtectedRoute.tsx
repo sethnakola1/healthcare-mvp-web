@@ -2,34 +2,47 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { UserRole } from '../../types';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: string;
-  requiredRoles?: string[];
+  requiredRole?: UserRole | UserRole[];
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
-  requiredRole,
-  requiredRoles,
+  requiredRole
 }) => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
 
-  // Check if user is authenticated
-  if (!isAuthenticated) {
+  // Show loading spinner while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // Redirect to login if not authenticated
+  if (!isAuthenticated || !user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   // Check role-based access
-  if (requiredRole && user?.role !== requiredRole) {
-    return <Navigate to="/unauthorized" replace />;
-  }
+  if (requiredRole) {
+    const userRole = user.role as UserRole;
+    const hasRequiredRole = Array.isArray(requiredRole)
+      ? requiredRole.includes(userRole)
+      : userRole === requiredRole;
 
-  if (requiredRoles && user?.role && !requiredRoles.includes(user.role)) {
-    return <Navigate to="/unauthorized" replace />;
+    if (!hasRequiredRole) {
+      return <Navigate to="/unauthorized" replace />;
+    }
   }
 
   return <>{children}</>;
 };
+
+export default ProtectedRoute;
